@@ -1,11 +1,18 @@
 package com.backend.guestnhouse.controllers;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import javax.validation.Valid;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -93,11 +100,14 @@ public class AuthController {
 					.badRequest()
 					.body(new MessageResponse("Error: Email is already in use!"));
 		}
-
+		Date now = new Date();
 		// Create new user's account
 		User user = new User(signUpRequest.getUsername(), 
-							 signUpRequest.getEmail(),
-							 encoder.encode(signUpRequest.getPassword()));
+				 signUpRequest.getEmail(),
+				 encoder.encode(signUpRequest.getPassword()),
+				 signUpRequest.getNumber(),
+				 signUpRequest.getUserImage(),
+				 now);
 
 		Set<String> strRoles = signUpRequest.getRoles();
 		Set<Role> roles = new HashSet<>();
@@ -132,5 +142,32 @@ public class AuthController {
 		userRepository.save(user);
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+	}
+	
+	
+	@PostMapping("/uploadUserImage")
+	private String handleuserImageFileUpload(@RequestParam("userImage") MultipartFile userImage) {
+		try {
+			String fileName = System.getProperty("user.dir");
+			Path path = Paths.get(fileName + "/uploads");
+
+			if (!Files.exists(path)) {
+				Files.createDirectory(path);
+				File fileToSave = new File(
+				path + "/" + userImage.getOriginalFilename());
+				userImage.transferTo(fileToSave);
+			} else {
+
+				File fileToSave = new File(
+				path + "/" + userImage.getOriginalFilename());
+				userImage.transferTo(fileToSave);
+			}
+
+		} catch (IOException ioe) {
+			// if something went bad, we need to inform client about it
+			return "error";
+		}
+		// everything was OK, return HTTP OK status (200) to the client
+		return userImage.getOriginalFilename();
 	}
 }

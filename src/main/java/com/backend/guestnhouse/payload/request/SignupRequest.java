@@ -1,5 +1,6 @@
 package com.backend.guestnhouse.payload.request;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.validation.constraints.*;
@@ -19,6 +20,13 @@ public class SignupRequest {
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;
+    
+    private String number;
+		
+	private String userImage;
+	
+	private Date created_date;
+
   
     public String getUsername() {
         return username;
@@ -48,7 +56,33 @@ public class SignupRequest {
       return this.roles;
     }
     
-    public void setRole(Set<String> roles) {
+    public void setRoles(Set<String> roles) {
       this.roles = roles;
     }
+
+	public String getNumber() {
+		return number;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
+	public String getUserImage() {
+		return userImage;
+	}
+
+	public void setUserImage(String userImage) {
+		this.userImage = userImage;
+	}
+
+	public Date getCreated_date() {
+		return created_date;
+	}
+
+	public void setCreated_date(Date created_date) {
+		this.created_date = created_date;
+	}
+    
+    
 }
