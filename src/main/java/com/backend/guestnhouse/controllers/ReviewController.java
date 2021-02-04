@@ -1,7 +1,10 @@
 package com.backend.guestnhouse.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,14 +27,23 @@ public class ReviewController {
 	@Autowired
 	private ReviewService reviewService;
 	
-	@PostMapping("/{idRoom}/{idUser}")
-	public String addReview(@RequestBody Review review,@PathVariable(value="idRoom") String idRoom,@PathVariable(value="idUser") String idUser) {
-		if(reviewService.addReview(review, idRoom, idUser)) {
+	@PostMapping("/{idHouse}/{idUser}")
+	public String addReview(@RequestBody Review review,@PathVariable(value="idHouse") String idHouse,@PathVariable(value="idUser") String idUser) {
+		if(reviewService.addReview(review, idHouse, idUser)) {
 			return "success";
 		}
 		return "error";
 	}
 	
+	@GetMapping("/{idHouse}")
+	public List<Review> listReviews(@PathVariable(value="idHouse") String idHouse){
+		return reviewRepository.findAllReviews(0, idHouse);
+	}
+	
+	@GetMapping("/review/{idReview}")
+	public Review getReviewById(@PathVariable(value="idReview") String idReview){
+		return reviewRepository.findById(idReview).orElse(null);
+	}
 	
 	@DeleteMapping("/{idReview}")
 	public Boolean archiveReview(@PathVariable(value="idReview") String idReview) {
@@ -47,12 +59,14 @@ public class ReviewController {
 		return "not updated";
 	}
 	
-	@PostMapping("/{idReview}")
-	public String validateReview(@PathVariable(value="idReview") String idReview) {
-
-		if(reviewService.validateReview(idReview)) {
-			return "validated";
-		}
-		return "not validated";
+	@GetMapping("/rating/{idHouse}")
+	public float ratingbyHouse(@PathVariable(value="idHouse") String idHouse) {
+		return reviewService.ratingbyHouse(idHouse);
 	}
+
+	@GetMapping("users/{idUser}")
+	public List<Review> listReviewsByUser(@PathVariable(value="idUser") String idUser){
+		return reviewRepository.findReviewByUser(idUser);
+	}
+	
 }

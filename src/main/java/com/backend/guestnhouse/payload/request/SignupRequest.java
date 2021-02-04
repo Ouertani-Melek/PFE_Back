@@ -15,7 +15,11 @@ public class SignupRequest {
     @Email
     private String email;
     
-    private Set<String> roles;
+    private String lastname;
+    
+    private String firstname;
+
+
     
     @NotBlank
     @Size(min = 6, max = 40)
@@ -51,14 +55,6 @@ public class SignupRequest {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    public Set<String> getRoles() {
-      return this.roles;
-    }
-    
-    public void setRoles(Set<String> roles) {
-      this.roles = roles;
-    }
 
 	public String getNumber() {
 		return number;
@@ -82,6 +78,22 @@ public class SignupRequest {
 
 	public void setCreated_date(Date created_date) {
 		this.created_date = created_date;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
 	}
     
     

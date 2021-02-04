@@ -1,7 +1,11 @@
 package com.backend.guestnhouse.security.services;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -28,12 +32,12 @@ public class UserDetailsImpl implements UserDetails {
 	@JsonIgnore
 	private String password;
 	
-	private List<String> permissions;
+	private Set<String> permissions;
 
 	private Collection<? extends GrantedAuthority> authorities;
 
 	public UserDetailsImpl(String id, String username, String email, 
-			Collection<? extends GrantedAuthority> authorities, String password,List<String> permissions) {
+			Collection<? extends GrantedAuthority> authorities, String password,Set<String> permissions) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
@@ -51,13 +55,15 @@ public class UserDetailsImpl implements UserDetails {
 	        	permissions.add(permission.getName());
 	        }
 	    }
+	    Set<String> rolesPermissions = new LinkedHashSet<String>(permissions);
+
 		return new UserDetailsImpl(
 				user.getId(), 
 				user.getUsername(), 
 				user.getEmail(),
 				authorities,
 				user.getPassword(),
-				permissions);
+				rolesPermissions);
 	}
 
 	@Override
@@ -105,7 +111,7 @@ public class UserDetailsImpl implements UserDetails {
 	
 	
 
-	public List<String> getPermissions() {
+	public Set<String> getPermissions() {
 		return permissions;
 	}
 	

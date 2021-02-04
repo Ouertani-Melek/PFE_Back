@@ -17,7 +17,6 @@ public class User {
   @Id
   private String id;
 
-  @NotBlank
   @Size(max = 20)
   private String username;
 
@@ -31,14 +30,26 @@ public class User {
   private String password;
   
   private String number;
-	
+  
+  private String lastName;
+  
+  private String firstName;
 	
   private String userImage;
 	
   private Date created_date;
 
+  private boolean owner;
+  
+  private boolean isEnabled;
+
+  private int archived;
+
   @DBRef
   private Set<Role> roles = new HashSet<>();
+
+
+
 
   public User() {
   }
@@ -51,7 +62,7 @@ public class User {
   
   
 
-  public User(@NotBlank @Size(max = 20) String username, @NotBlank @Size(max = 50) @Email String email,
+  public User(@Size(max = 20) String username, @NotBlank @Size(max = 50) @Email String email,
 		@NotBlank @Size(max = 120) String password, String number, String userImage, Date created_date) {
 	super();
 	this.username = username;
@@ -61,6 +72,19 @@ public class User {
 	this.userImage = userImage;
 	this.created_date = created_date;
 }
+  
+  public User(@Size(max = 20) String username, @NotBlank @Size(max = 50) @Email String email,
+			@NotBlank @Size(max = 120) String password, String number, String userImage, Date created_date,String firstname,String lastname) {
+		super();
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.number = number;
+		this.userImage = userImage;
+		this.created_date = created_date;
+		this.firstName=firstname;
+		this.lastName=lastname;
+	}
 
 public String getId() {
     return id;
@@ -125,7 +149,44 @@ public Date getCreated_date() {
 public void setCreated_date(Date created_date) {
 	this.created_date = created_date;
 }
-  
-  
-  
+
+  public boolean isOwner() {
+    return owner;
+  }
+
+  public void setOwner(boolean owner) {
+    this.owner = owner;
+  }
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+
+	public void setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
+	}
+	
+    
+    public int getArchived() {
+        return archived;
+    }
+
+    public void setArchived(int archived) {
+        this.archived = archived;
+    }
 }

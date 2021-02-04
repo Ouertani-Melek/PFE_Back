@@ -19,6 +19,9 @@ public interface DayRepository extends MongoRepository<Day, String>{
 	@Query("{'dayName' : ?0 , 'archived' : 0, 'season.id' : ?1}")
 	public Day existsDay(String dayName,String idSeason);
 	
+	@Query("{'season.id' : ?0}")
+	public List<Day> existsDaybySeasonId(String idSeason);
+	
 	@Query("{archived : ?0}")
 	public List<Day> getAllDays(int archived);
 	

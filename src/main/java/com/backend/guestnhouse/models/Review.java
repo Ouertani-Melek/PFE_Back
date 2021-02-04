@@ -19,11 +19,9 @@ public class Review {
 	
 	private Date modified_at;
 	
-	private int validated;
-	
 	private int archived;
 	
-	private Room room;
+	private House house;
 	
 	private User user;
 
@@ -32,7 +30,7 @@ public class Review {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Review(String id, float rating, String comment, Date created_at, Date modified_at, int archived, Room room,
+	public Review(String id, float rating, String comment, Date created_at, Date modified_at, int archived, House house,
 			User user) {
 		super();
 		this.id = id;
@@ -41,7 +39,7 @@ public class Review {
 		this.created_at = created_at;
 		this.modified_at = modified_at;
 		this.archived = archived;
-		this.room = room;
+		this.house = house;
 		this.user = user;
 	}
 
@@ -93,12 +91,14 @@ public class Review {
 		this.archived = archived;
 	}
 
-	public Room getRoom() {
-		return room;
+	
+
+	public House getHouse() {
+		return house;
 	}
 
-	public void setRoom(Room room) {
-		this.room = room;
+	public void setHouse(House house) {
+		this.house = house;
 	}
 
 	public User getUser() {
@@ -109,13 +109,7 @@ public class Review {
 		this.user = user;
 	}
 
-	public int getValidated() {
-		return validated;
-	}
 
-	public void setValidated(int validated) {
-		this.validated = validated;
-	}
 	
 	
 }

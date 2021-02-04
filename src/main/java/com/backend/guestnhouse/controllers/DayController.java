@@ -1,15 +1,12 @@
 package com.backend.guestnhouse.controllers;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,12 +37,12 @@ public class DayController {
 	
 	@PostMapping("/specialDay/{idSeason}")
 	public String addSpecialDay(@RequestBody Day day,@PathVariable(value="idSeason") String idSeason) {
-		if(dayService.addSpecialDay(day,idSeason)) {
-			return "success";
-		}
-		return "error";
+		return dayService.addSpecialDay(day,idSeason);
+
 	}
-	
+	/*
+	 * A optimiser si possible
+	 */
 	@GetMapping("/{idRoom}")
 	public List<HashMap<String, Object>> getAllDays(@PathVariable(value="idRoom") String idRoom) {
 		Calendar calendar = Calendar.getInstance();
@@ -61,8 +58,10 @@ public class DayController {
 				map.put("startdate",date);
 				map.put("endate",date);
 				if(day==1 || day==7) {
+					map.put("dayName","Weekend");
 					map.put("price",season.getWeekendPrice());
 				}else {
+					map.put("dayName","Normal Day");
 					map.put("price",season.getNormalPrice());
 				}
 				map.put("special",0);
@@ -74,9 +73,10 @@ public class DayController {
 			}
 		}
 		for(Day day : specialDays) {
-			if(day!=null && day.getSeason()!=null) {
+			if(day!=null && day.getSeason()!=null && day.getSeason().getRoomSeasons()!=null && day.getSeason().getRoomSeasons().getId().equals(idRoom)  ) {
 			HashMap<String, Object> map = new HashMap<>();
 			map.put("idDay",day.getId());
+			map.put("dayName",day.getDayName());
 			map.put("startdate",day.getDate_debut());
 			map.put("endate",day.getDate_fin());
 			map.put("price",day.getPrice());
@@ -88,6 +88,16 @@ public class DayController {
 			}
 		}
 		return daysPrices;
+	}
+	
+	@GetMapping("/datesDisabled/{idRoom}/{idSeason}")
+	public List<Date> disabledDays(@PathVariable(value="idRoom") String idRoom,@PathVariable(value="idSeason") String idSeason) {
+		List<Season> seasons = seasonRepository.getSeasonsbyRoomDisable(0, idRoom,idSeason);
+		List<Date> datesBetween=new ArrayList<Date>();
+		for(Season season : seasons) {
+			datesBetween.addAll(dayService.getDatesBetween(season.getDate_debut(),season.getDate_fin()));			
+		}
+		return datesBetween;
 	}
 	
 	@DeleteMapping("/specialDay/{idDay}")

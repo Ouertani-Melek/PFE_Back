@@ -1,21 +1,17 @@
 package com.backend.guestnhouse.services;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
-
+import com.backend.guestnhouse.models.Day;
 import com.backend.guestnhouse.models.Room;
 import com.backend.guestnhouse.models.Season;
-import com.backend.guestnhouse.models.User;
+import com.backend.guestnhouse.repository.DayRepository;
 import com.backend.guestnhouse.repository.RoomRepository;
 import com.backend.guestnhouse.repository.SeasonRepository;
-import com.backend.guestnhouse.repository.UserRepository;
 
 @Service
 public class SeasonService {
@@ -26,33 +22,51 @@ public class SeasonService {
 	@Autowired
 	private RoomRepository roomRepository;
 	
-	public Boolean addSeason(Season season,String idRoom) {
+	@Autowired
+	private DayRepository dayRepository;
+	
+	public Season addSeason(Season season,String idRoom) {
 		Room room=roomRepository.findById(idRoom).orElse(null);
 		if(room!=null) {
 			season.setRoomSeasons(room);
 			seasonRepository.save(season);
-			return true;
+			return season;
 		}
-		return false;
+		return null;
 	}
 	
 	
 	public String archiveSeason(String idSeason) {
 		Season season=seasonRepository.findById(idSeason).orElse(null);
-		season.setArchived(1);
-		/*for(Day day : season.getDays()) {
-			day.setArchived(1);
-		}*/
-		seasonRepository.save(season);
-		return ("archived");	
+		List<Day> days = dayRepository.existsDaybySeasonId(idSeason);
+		if(season!=null) {
+			season.setArchived(1);
+			for(Day day : days) {
+				day.setArchived(1);
+				dayRepository.save(day);
+			}
+			seasonRepository.save(season);
+			return ("archived");	
+		}else {
+			return "no season to be archived";
+
+		}
+		
 	}
 	
 	public Season updateSeason(Season season,String idSeason) {
 		Season updateSeason=seasonRepository.findById(idSeason).orElse(null);
-		updateSeason.setSeasonName(season.getSeasonName());
-		updateSeason.setDate_debut(season.getDate_debut());
-		updateSeason.setDate_fin(season.getDate_fin());
-		seasonRepository.save(updateSeason);
-		return updateSeason;
+		if(updateSeason!=null) {
+			updateSeason.setSeasonName(season.getSeasonName());
+			updateSeason.setDate_debut(season.getDate_debut());
+			updateSeason.setDate_fin(season.getDate_fin());
+			updateSeason.setNormalPrice(season.getNormalPrice());
+			updateSeason.setWeekendPrice(season.getWeekendPrice());
+			seasonRepository.save(updateSeason);
+			return updateSeason;
+		}
+		return null;
+		
+		
 	}
 }

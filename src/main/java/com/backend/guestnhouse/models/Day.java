@@ -3,6 +3,7 @@ package com.backend.guestnhouse.models;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "special_day")
@@ -23,11 +24,11 @@ public class Day {
 	
 	private int archived;
 
+	@DBRef
 	private Season season;
 
 	public Day() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Day(String id, String dayName, Date date_debut, Date date_fin, int special_date, Season season) {

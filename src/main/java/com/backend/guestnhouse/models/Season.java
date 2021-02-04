@@ -1,12 +1,14 @@
 package com.backend.guestnhouse.models;
 
 import java.util.Date;
-import java.util.List;
+
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Document(collection = "season")
 public class Season {
@@ -14,6 +16,7 @@ public class Season {
 	@Id
 	private String id;
 	
+	@NotBlank
 	private String seasonName;
 	
 	private Date date_debut;
@@ -26,11 +29,11 @@ public class Season {
 	
 	private float weekendPrice;
 	
+	@DBRef
 	private Room roomSeasons;
 	
 	public Season() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	
@@ -120,6 +123,14 @@ public class Season {
 		this.date_debut = date_debut;
 		this.date_fin = date_fin;
 		this.archived = archived;
+		this.roomSeasons = roomSeasons;
+	}
+
+
+
+	public Season(@NotBlank String seasonName, Room roomSeasons) {
+		super();
+		this.seasonName = seasonName;
 		this.roomSeasons = roomSeasons;
 	}
 	

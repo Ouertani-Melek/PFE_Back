@@ -16,6 +16,8 @@ public interface RoleRepository extends MongoRepository<Role, String> {
     
   @Query("{archived : ?0}")
   List<Role> findAllRoles(int archived);
-  
-  
+
+   Role findRoleByName(String role);
+
+
 }
